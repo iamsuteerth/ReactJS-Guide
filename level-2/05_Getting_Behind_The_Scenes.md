@@ -101,3 +101,169 @@ Work here can be done in async
 5. DOM deletions and updations are marked
 6. List of DOM updates is created for the NEXT phase
 7. This is the result of the reder phase.
+
+# Commit Phase
+- The list of dom updates are reflected into dom synchronously here so that the DOM never shows partial runs
+
+- The fiber tree then becomes the tree for next render cycle
+
+- Thus the browser proceeds to update the screen where the UI is updated on the screen.
+
+- The commit phase is carried out by `ReactDOM`. `React` doesn't actually touch the DOM and thus can be used on different platforms
+
+- React Native can be used for IOS and android and many other `'renderers'` update the UI. Its a list of updates made to the components.
+
+## How diffing works?
+Diffing is based on TWO assumptions
+- Two elements of different types will prodct different trees
+- Elements with a stable key prop stay the same across renders
+- This brings O(n^3) to O(n) since diffing is comparing elements step by step based on the position in their tree.
+
+### Same position, different element
+`<div>` -> `<header>`
+
+React assumes that entire sub tree is invalid and old components (including state) are destroyed and removed from the DOM
+
+Tree might be rebuilt if children stated the sames as the state is reset
+
+### Same position, Same element
+Element will be kep as well as child elements INCLUDING state
+
+Here, new props/attributes are passed if they are changed between renders
+
+If this is something you don't want, `key prop` can be used
+
+### Key Prop
+Special prop to tell the diffing algo that an element is unique. Allows reacts to distinguish between multiple instances of same component type
+
+List without keys -> Same elements but different position. So they are removed and recreated (bad for performance).     
+
+When you give a changing key, upon change, it initiates re-renders which can be the desired behaviour in some cases
+
+## Two type of logic in react components
+### Render logic
+- Code that lives at the top level of the component function (such as state definitions)
+- Participates in describing how the component view looks like
+- Executed every time the component renders
+### Event handler functions 
+- Executed as consequence of the event that the handler is listening for
+- Code that actually DOES things such as `onChange`, `onClick` etc.
+
+### Functional Programming Principles
+#### Side Effects
+Dependency on or modification of any data outside the function scope. "Interaction with the outside world". Mutating external requests, writing to DOM or HTTP requests
+    - Not necessarily bad
+#### Pure function
+A function without side effects such as a computeArea function computing area ONLY based on given input. Same input -> Same Output
+
+## Rules for render logic
+- Components must be pure when it comes to render logic given the same props.
+- Render logic MUST product no side effects
+    - Dont perform network requests or API calls
+    - Dont start timers
+    - Dont directly use DOM API
+    - Dont mutuate objects outside the function scope (why props are not meant to be mutated)
+    - Dont update state or referals as it will create an infinite loop
+> Side effects are allowed (and encouraged) in event handler functions. There is a special HOOK to register side effects (useEffect)
+
+## State updates are batched
+Multiple pieces of state in an event handler are batched and then only render + commit is done. This reduces render wastage.
+
+State is stored in the fiber tree during render phase. If a console.log is done in between some setStates, the ans variable will hold the current state value. Thus updating state in react is async. This is true regardless of the number of states. 
+
+If we need to update state based on previous update, we use setState with callback.
+
+React 18+ introduced batching for timeouts, promises and native events such as addEventListener
+
+```
+You can opt out of automatic batching by wrapping a state update in ReactDOM.flushSync()
+
+setState()
+setState()
+setState()
+This wont work because of batching
+
+setState((old) => old + 1)
+setState((old) => old + 1)
+setState((old) => old + 1)
+This will work because a callback function ALWAYS uses the latest value
+```
+#### if old.state === new.state, then NO render
+
+# DOM Refresher
+## Event Propagation and Delegation
+Consider a DOM tree with some elements. An onClick event is fired on a button.
+
+The event is created @root and then travels to the target event. (Capture Phase)
+
+Place an EventHandler function to the event (Target Element)
+
+Then it goes to the root ONCE again in the bubbling phase
+
+By default, event handlers listen to events on the target during the bubbling phase
+
+Bubbling can be prevented with e.stopPropagation
+
+For 2 elements having same handler, its fired when the click happens which can be stopped by the method above
+
+## Event Delegation
+- Handling events for multiple elements centrally in one single parent element.
+- Better for performance and memory, as it needs only one handler function
+
+1. Add handler to parent (.options)
+2. Check for target element (e.target)
+3. If target is one of the `<button>s`, handle the event
+
+- This is common in vanilla JS apps but not ReactJS
+
+## How react handles events
+All the eventHandlers are attached to ROOT dom container where all the events are handled. Pooling of handlers essentially
+
+Behind the scenes, event delegation happens to ROOT 
+
+## Synthetic Events
+They are a wrapper over the native event objects. Have the same interface as native event objects like stopPropagation() and preventDefault()
+
+Fixes browser inconsistencies
+
+Most of these bubble (including focus, blur, change etc.) except for `scroll`
+
+- Default behavior cannot be prevented by returning false (only by using preventDefault)
+
+#
+## Library are like separate ingedients
+## Framework are like AIO kits
+| Framework                                                                               | Library                                                                            |
+|-----------------------------------------------------------------------------------------|------------------------------------------------------------------------------------|
+| Everything you need to build is included in the framework such as routing, styling etc. | You can choose multiple 3rd party libraries to build a complete app                |
+|                                                                                         |                                                                                    |
+| You are stuck with the framwork's tools and conventions                                 | You need to research, download and stay up to day with multiple external libraries |
+
+# React's 3rd Party Library Ecosystem
+## Routing 
+**React Router**, React Location
+## HTTP Requests
+**JS Fetch()**, Axios
+## Remote State Management
+**React Query**, SWR, Apolllo
+## Global State Management
+**Context API**, **Redux**, Zustland
+## Styling
+**CSS Modules**, **Styled Components**, **Tailwind CSS**
+## Form Management
+**React Hook Form**, Formix
+## Animations/Transitions
+Motion, React Spring
+## UI Components
+Material UI, Chakra UI, Mantine
+
+## Frameworks on top of react
+NextJS, Remix, Gatsby
+
+- React framworks offer many other features such as server side rendering, static site generation and better developer experience
+
+Some are `Full Stack Frameworks`
+
+<div align="center">
+L139 to be refered for full summary in the Udemy course
+</div>
