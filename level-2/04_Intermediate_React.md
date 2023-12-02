@@ -23,6 +23,8 @@
 
 Refer to this project <a href="https://github.com/iamsuteerth/Basic-ReactJS-Projects/tree/main/05_use_popcorn_lv2">Use Popcorn (05)</a> to understand this section
 
+`The commented code has the code relevant to this section`
+
 # Back to thinking in react
 
 `How to split a UI into components?`

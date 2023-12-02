@@ -20,7 +20,9 @@ function Component(){
 ```
 Here, we will get into an infinite loop as a rebuild will keep on getting triggered as the component runs setState again and again in the init area where `we are not supposed to have side effects`
 
-Refer to <a href=''>Link</a> for detailed explanation of this part
+Refer to <a href='https://github.com/iamsuteerth/Basic-ReactJS-Projects/tree/main/05_use_popcorn_lv2'>Use Popcorn Project</a> for detailed explanation of this part
+
+`The commented code has the code relevant to this section`
 
 - Side effects can be made in `Event Handlers` and `Effects(useEffect)`
 
