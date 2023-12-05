@@ -56,3 +56,54 @@ Used for creating reference
 Refer to <a href='https://github.com/iamsuteerth/Basic-ReactJS-Projects/tree/main/05_use_popcorn_lv2'>Use Popcorn Project</a> to see the hooks in place.
 
 Refer to <a href='https://github.com/iamsuteerth/Basic-ReactJS-Projects/tree/main/05_use_popcorn_lv2_vanilla'>Use Popcorn Project Vanilla</a> for lean code.
+
+|                       | Function Components                                                                                                                                                    | Class Componenets                       |
+|------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------|
+| Introduced             | v16.8 (2019)                                                                                                                                                           | v0.13 (2015)                            |
+| How to create          | JS function                                                                                                                                                            | ES6 class extending React.Component     |
+| Reading props          | Destructuring or props.X                                                                                                                                               | this.props.X                            |
+| Local State            | useState hook                                                                                                                                                          | this.setState()                         |
+| Side Effects/Lifecycle | useEffect hook                                                                                                                                                         | Lifecycle Methods                       |
+| Event Handlers         | Functions                                                                                                                                                              | Class methods                           |
+| Returning JSX          | Return JSX from function                                                                                                                                               | Return JSX from render method           |
+| Advantages             | 1. Easier to build <br> 2. Cleaner Code as useEffect combines ALL lifecycle related code in a single place <br> 3. Easier to share stateful login <br> 4. No need to use THIS keyword | Lifecycle might be easier for beginners |
+
+```js
+// Example
+import React from "react";
+
+class Counter extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { count: 5 };
+    this.handleDecrement = this.handleDecrement.bind(this);
+    this.handleIncrement = this.handleIncrement.bind(this);
+  }
+  handleDecrement() {
+    // this here is undefined because upon call, a copy is called
+    this.setState((currentState) => {
+      return { count: currentState.count - 1 };
+    });
+  }
+  handleIncrement() {
+    this.setState((currentState) => {
+      return { count: currentState.count + 1 };
+    });
+  }
+  render() {
+    const date = new Date('June 21 2027');
+    date.setDate(date.getDate() + this.state.count);
+    return (
+      <div>
+        <button onClick={this.handleDecrement}>-</button>
+        <span>{date.toDateString()}</span>
+        <span>[{this.state.count}]</span>
+        <button onClick={this.handleIncrement}>+</button>
+      </div>
+    );
+  }
+}
+
+export default Counter;
+```
+Refer to <a href='https://github.com/iamsuteerth/Basic-ReactJS-Projects/tree/main/06_classy_weather'>Classy Weather App</a> for a project built using class components.
