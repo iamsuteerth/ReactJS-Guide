@@ -113,6 +113,6 @@ Credits to
 <a href="https://github.com/bluehallu">
 bluehullu
 </a>
-for providing these. I just formatted them to make things even simpler and inlude these as part of this NodeJS guide :D
+for providing these. I just formatted them to make things even simpler and inlude these as part of this ReactJS guide :D
 </b>
 </div>
